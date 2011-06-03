@@ -93,6 +93,7 @@ class Controller_Comment extends Controller_Template {
 		$comment_root_id = (int) $this->request->param('object_id', NULL);
 		$comment_place   = HTML::chars($this->request->param('place', 'next'));
 		$comment_type    = HTML::chars($this->request->param('type'));
+		$language_abbr   = HTML::chars($this->request->param('lang'), I18n::lang());
 
 		if( ! $comment_root_id)
 			throw new HTTP_Exception_404();
@@ -104,6 +105,8 @@ class Controller_Comment extends Controller_Template {
 			if( ! $post['text'])
 				$this->request->redirect(Request::initial()->referrer().'#comment_'.$comment_root_id);
 
+			$language = Jelly::query('system_lang')->where('abbr', '=', $language_abbr)->limit(1)->select();
+
 			$comment_type_id = Jelly::query('comment_type')
 				->where('name', '=', $comment_type)
 				->limit(1)
@@ -114,6 +117,7 @@ class Controller_Comment extends Controller_Template {
 			$post['text']      = trim(HTML::chars($post['text']));
 			$post['author']    = $this->_user->id;
 			$post['type']      = $comment_type_id;
+			$post['lang']      = $language->id;
 
 			$comment = Jelly::factory('comment')
 				->set($post);

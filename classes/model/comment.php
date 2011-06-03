@@ -30,6 +30,10 @@ class Model_Comment extends Jelly_Model_MPTT {
 					'default'    => NULL,
 					'allow_null' => TRUE,
 				)),
+				'lang' => Jelly::field('BelongsTo', array(
+					'foreign' => 'system_lang',
+					'model' => 'system_lang'
+				)),
 
 				'object_id' => Jelly::field('Integer'),
 
