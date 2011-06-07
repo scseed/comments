@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');?>
 <h3><a name="comments"><?php echo __('Комментарии:')?></a></h3>
-<?php echo $comments?>
+<div id="comments"><?php echo $comments?></div>
 
 <?php if(isset($_user)):?>
 <?php echo StaticJs::instance()->addJsInline(
