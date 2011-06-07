@@ -4,7 +4,7 @@
 $level = $nodes->current()->{$level_column};
 $first = TRUE;
 
-foreach ($nodes as $node): ?>
+foreach ($nodes as $node):?>
 	<?php if ($node->{$level_column} > $level):?>
 		<ul>
 	<?php elseif ($node->{$level_column} < $level):?>
@@ -18,19 +18,19 @@ foreach ($nodes as $node): ?>
 			<div class="info">
 				<div class="avatar">
 					<?php
-					 $image = ($node->author->user_data->avatar)
-							? 'media/images/avatars/'.$node->author->id.'/comment.png'
+					 $image = ($node->user->avatar)
+							? 'media/images/avatars/'.$node->user->id.'/comment.png'
 							: 'i/stubs/avatar_comment.png';
-					echo HTML::image($image, array('alt' => $node->author->user_data->last_name))?>
+					echo HTML::image($image, array('alt' => $node->user->fullname))?>
 				</div>
-				<div class="author"><?php echo $node->author->user_data->last_name?> <?php echo $node->author->user_data->first_name?></div>
+				<div class="author"><?php echo $node->user->fullname?></div>
 				<div class="date_create"><?php echo I18n_Date::format($node->date_create, 'long')?></div>
 			</div>
 			<div class="actions">
 				<?php if(isset($_user)):?>
-				<div class="add_comment" prev_id="<?php echo $node->id?>" place="inside" title="Ответить на комментарий">[ &larr; ]</div>
+				<div class="add_comment button_black" prev_id="<?php echo $node->id?>" place="inside" title="<?php echo __('комментировать')?>"><?php echo __('комментировать')?></div>
 				<?php endif;?>
-				</div>
+			</div>
 			<div class="text"><?php echo $node->text?></div>
 		</div>
 	<?php

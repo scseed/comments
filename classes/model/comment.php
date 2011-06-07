@@ -25,8 +25,9 @@ class Model_Comment extends Jelly_Model_MPTT {
 				'type'   => Jelly::field('BelongsTo', array(
 					'foreign' => 'comment_type'
 				)),
-				'author' => Jelly::field('BelongsTo', array(
-					'foreign'    => 'user',
+				'user' => Jelly::field('BelongsTo', array(
+//					'foreign'    => 'user',
+					'column' => 'author_id',
 					'default'    => NULL,
 					'allow_null' => TRUE,
 				)),
@@ -57,7 +58,13 @@ class Model_Comment extends Jelly_Model_MPTT {
 					'default' => TRUE
 				)),
 			))
-		->load_with(array('type', 'author'));
+		->load_with(array(
+				'type',
+				'user',
+//				'user:user_data',
+				'lang'
+			)
+		);
 
 		parent::initialize($meta);
 	}
