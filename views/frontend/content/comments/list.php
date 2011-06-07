@@ -13,22 +13,22 @@ foreach ($nodes as $node):?>
 	<?php elseif ( ! $first):?>
 		</li>
 	<?php endif;?>
-	<li><a name="comment_<?php echo $node->id?>"></a>
+	<li<?php echo ($node->lang->abbr != I18n::lang() ? ' class="another_lang"' : NULL)?>><a name="comment_<?php echo $node->id?>"></a>
 		<div class="comment">
 			<div class="info">
 				<div class="avatar">
 					<?php
 					 $image = ($node->user->avatar)
-							? 'media/images/avatars/'.$node->user->id.'/comment.png'
+							? 'media/images/avatars/'.$node->author->id.'/comment.png'
 							: 'i/stubs/avatar_comment.png';
-					echo HTML::image($image, array('alt' => $node->user->fullname))?>
+					echo HTML::image($image, array('alt' => $node->author->fullname))?>
 				</div>
-				<div class="author"><?php echo $node->user->fullname?></div>
+				<div class="author"><?php echo $node->author->fullname?></div>
 				<div class="date_create"><?php echo I18n_Date::format($node->date_create, 'long')?></div>
 			</div>
 			<div class="actions">
 				<?php if(isset($_user)):?>
-				<div class="add_comment button_black" prev_id="<?php echo $node->id?>" place="inside" title="<?php echo __('комментировать')?>"><?php echo __('комментировать')?></div>
+				<div class="add_comment button_black" prev_id="<?php echo $node->id?>" place="inside" title="<?php echo __('your answer on this comment')?>"><?php echo __('comment')?></div>
 				<?php endif;?>
 			</div>
 			<div class="text"><?php echo $node->text?></div>

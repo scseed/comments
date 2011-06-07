@@ -17,9 +17,9 @@ class Controller_Comment extends Controller_Template {
 	 */
 	public function action_tree()
 	{
-		$allow_comments = $this->request->param('visibility');
-		$object_id      = (int) $this->request->param('object_id');
-		$comment_type   = HTML::chars($this->request->param('type'));
+		$allow_comments    = $this->request->param('visibility');
+		$object_id         = (int) $this->request->param('object_id');
+		$comment_type_name = HTML::chars($this->request->param('type'));
 
 		if($allow_comments == 'hide')
 		{
@@ -30,12 +30,23 @@ class Controller_Comment extends Controller_Template {
 		if( ! $this->_ajax OR ! $object_id)
 			throw new HTTP_Exception_404();
 
-		if( ! $comment_type)
-			throw new HTTP_Exception_500('Comment type is not defined');
+		$comment_type = Jelly::query('comment_type')->where('name', '=', $comment_type_name)->limit(1)->select();
+
+		if( ! $comment_type->loaded())
+		{
+			try
+			{
+				$comment_type->save();
+			}
+			catch(Jelly_Validation_Exception $e)
+			{
+				throw new HTTP_Exception_500('Ошибка при сохранении типа комментария.');
+			}
+		}
 
 		$comments_root = Jelly::query('comment')
 			->where('object_id', '=', $object_id)
-			->where('comment:type.name', '=', $comment_type)
+			->where('type', '=', $comment_type->id)
 			->where('level', '=', 0)
 			->limit(1)
 			->select();
@@ -54,15 +65,10 @@ class Controller_Comment extends Controller_Template {
 				$scope = $scope->scope + 1;
 			}
 
-			$comments_root_type = Jelly::query('comment_type')
-				->where('name', '=', $comment_type)
-				->limit(1)
-				->select();
-
 			$comments_root = Jelly::factory('comment')
 				->set(array(
 					'object_id' => $object_id,
-					'type' => $comments_root_type->id,
+					'type' => $comment_type->id,
 					'text'      => '-'
 				))->save();
 			$comments_root->insert_as_new_root($scope);
@@ -79,12 +85,14 @@ class Controller_Comment extends Controller_Template {
 				$place = 'inside';
 		}
 
+		StaticJs::instance()->addJs('/js/comments.js');
+
 		$this->template->content = View::factory('frontend/content/comments/tree')
 			->set('comments', $comments_root->render_descendants('comments/list'))
 			->bind('last_comment_id', $last_comment->id)
 			->bind('object_id', $object_id)
 			->bind('place', $place)
-			->bind('comment_type', $comment_type)
+			->bind('comment_type', $comment_type->name)
 			;
 	}
 

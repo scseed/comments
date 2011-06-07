@@ -25,15 +25,17 @@ class Model_Comment extends Jelly_Model_MPTT {
 				'type'   => Jelly::field('BelongsTo', array(
 					'foreign' => 'comment_type'
 				)),
-				'user' => Jelly::field('BelongsTo', array(
-//					'foreign'    => 'user',
+				'author' => Jelly::field('BelongsTo', array(
+					'foreign'    => 'user',
 					'column' => 'author_id',
 					'default'    => NULL,
 					'allow_null' => TRUE,
 				)),
 				'lang' => Jelly::field('BelongsTo', array(
 					'foreign' => 'system_lang',
-					'model' => 'system_lang'
+					'model' => 'system_lang',
+					'default'    => NULL,
+					'allow_null' => TRUE,
 				)),
 
 				'object_id' => Jelly::field('Integer'),
@@ -60,8 +62,7 @@ class Model_Comment extends Jelly_Model_MPTT {
 			))
 		->load_with(array(
 				'type',
-				'user',
-//				'user:user_data',
+				'author',
 				'lang'
 			)
 		);
