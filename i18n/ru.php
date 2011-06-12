@@ -5,4 +5,7 @@ return array(
 	'comment' => 'комментировать',
 	'to_comment' => 'Прокомментировать',
 	'your answer on this comment' => 'Ваш ответ на комментарий',
+	'delete' => 'удалить',
+	'delete comment' => 'удалить комментарий',
+	'Comment is deleted' => 'Комментарий удалён',
 );

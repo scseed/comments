@@ -14,8 +14,11 @@ foreach ($nodes as $node):?>
 		</li>
 	<?php endif;?>
 	<li<?php echo ($node->lang->abbr != I18n::lang() ? ' class="another_lang"' : NULL)?>><a name="comment_<?php echo $node->id?>"></a>
+		<?php if( ! $node->is_active): ?>
+		<h2><?php echo __('Comment is deleted')?></h2>
+		<?php else:?>
 		<div class="comment">
-			<div class="info">
+			<div class="info_wrapper">
 				<div class="avatar">
 					<?php
 					 $image = ($node->user->avatar)
@@ -23,16 +26,34 @@ foreach ($nodes as $node):?>
 							: 'i/stubs/avatar_comment.png';
 					echo HTML::image($image, array('alt' => $node->author->fullname))?>
 				</div>
-				<div class="author"><?php echo $node->author->fullname?></div>
-				<div class="date_create"><?php echo I18n_Date::format($node->date_create, 'long')?></div>
+				<div class="info">
+					<div class="author"><?php echo $node->author->fullname?></div>
+					<div class="date_create"><?php echo I18n_Date::format($node->date_create, 'long')?></div>
+					<?php if(isset($_user)):?>
+					<div class="actions">
+						<?php if($_user->has_role('admin')):?>
+						<div class="left">
+								<?php echo HTML::anchor(
+									Route::get('comments')->uri(
+										array(
+											'action' => 'delete',
+											'object_id' => $node->id,
+										)
+									),
+									__('delete'),
+									array('class' => 'comment_delete button_black', 'title' => __('delete comment'))
+								)?>
+						</div>
+						<?php endif;?>
+						<div class="comment_add button_black" prev_id="<?php echo $node->id?>" place="inside" title="<?php echo __('your answer on this comment')?>"><?php echo __('comment')?></div>
+					</div>
+					<?php endif;?>
+				</div>
 			</div>
-			<div class="actions">
-				<?php if(isset($_user)):?>
-				<div class="add_comment button_black" prev_id="<?php echo $node->id?>" place="inside" title="<?php echo __('your answer on this comment')?>"><?php echo __('comment')?></div>
-				<?php endif;?>
-			</div>
+
 			<div class="text"><?php echo $node->text?></div>
 		</div>
+		<?php endif;?>
 	<?php
 	$level = $node->{$level_column};
 	$first = FALSE;

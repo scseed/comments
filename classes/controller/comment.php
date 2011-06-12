@@ -98,12 +98,12 @@ class Controller_Comment extends Controller_Template {
 
 	public function action_add()
 	{
-		$comment_root_id = (int) $this->request->param('object_id', NULL);
+		$comment_parent_id = (int) $this->request->param('object_id', NULL);
 		$comment_place   = HTML::chars($this->request->param('place', 'next'));
 		$comment_type    = HTML::chars($this->request->param('type'));
 		$language_abbr   = HTML::chars($this->request->param('lang'), I18n::lang());
 
-		if( ! $comment_root_id)
+		if( ! $comment_parent_id)
 			throw new HTTP_Exception_404();
 
 		if($_POST)
@@ -111,7 +111,7 @@ class Controller_Comment extends Controller_Template {
 			$post    = Arr::extract($_POST, array('text'));
 
 			if( ! $post['text'])
-				$this->request->redirect(Request::initial()->referrer().'#comment_'.$comment_root_id);
+				$this->request->redirect(Request::initial()->referrer().'#comment_'.$comment_parent_id);
 
 			$language = Jelly::query('system_lang')->where('abbr', '=', $language_abbr)->limit(1)->select();
 
@@ -121,7 +121,7 @@ class Controller_Comment extends Controller_Template {
 				->select()
 				->id;
 
-			$post['object_id'] = $comment_root_id;
+			$post['object_id'] = $comment_parent_id;
 			$post['text']      = trim(HTML::chars($post['text']));
 			$post['author']    = $this->_user->id;
 			$post['type']      = $comment_type_id;
@@ -132,11 +132,11 @@ class Controller_Comment extends Controller_Template {
 
 			if( $comment_place == 'inside')
 			{
-				$comment->insert_as_last_child((int) $comment_root_id);
+				$comment->insert_as_last_child((int) $comment_parent_id);
 			}
 			else
 			{
-				$comment->insert_as_next_sibling((int) $comment_root_id);
+				$comment->insert_as_next_sibling((int) $comment_parent_id);
 			}
 
 			$this->request->redirect(Request::initial()->referrer().'#comment_'.$comment->id);
@@ -144,5 +144,32 @@ class Controller_Comment extends Controller_Template {
 
 		$this->template->content = View::factory('frontend/form/blog/comment');
 
+	}
+
+	public function action_delete()
+	{
+		$comment_id = (int) $this->request->param('object_id');
+
+		if( ! $comment_id)
+			throw new HTTP_Exception_404('Comment :comment_id is not found.', array(':comment_id' => $comment_id));
+
+		if( ! $this->_user)
+			throw new HTTP_Exception_401('Need to be loged in to delete comment');
+
+		if( ! $this->_user->has_role('admin'))
+			throw new HTTP_Exception_401(
+				'Deleting comment :comment_id is not allowed to user :user.',
+				array(
+					':comment_id' => $this->_user->id,
+					':user' => $this->_user->id
+				)
+			);
+
+		Jelly::query('comment')
+			->where('id', '=', $comment_id)
+			->set(array('is_active' =>  FALSE))
+			->update();
+
+		$this->request->redirect(Request::initial()->referrer().'#comment_'.$comment_id);
 	}
 } // End Controller_Comment
