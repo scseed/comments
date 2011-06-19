@@ -18,7 +18,7 @@ class Controller_Comment extends Controller_Template {
 	public function action_tree()
 	{
 		$allow_comments    = $this->request->param('visibility');
-		$object_id         = (int) $this->request->param('object_id');
+		$object_id         = HTML::chars($this->request->param('object_id'));
 		$comment_type_name = HTML::chars($this->request->param('type'));
 
 		if($allow_comments == 'hide')

@@ -38,7 +38,7 @@ class Model_Comment extends Jelly_Model_MPTT {
 					'allow_null' => TRUE,
 				)),
 
-				'object_id' => Jelly::field('Integer'),
+				'object_id' => Jelly::field('String'),
 
 				'date_create' => Jelly::field('Timestamp', array(
 					'auto_now_create' => TRUE,
