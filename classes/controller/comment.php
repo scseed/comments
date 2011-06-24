@@ -85,7 +85,7 @@ class Controller_Comment extends Controller_Template {
 				$place = 'inside';
 		}
 
-		StaticJs::instance()->addJs('/js/comments.js');
+		StaticJs::instance()->add('/js/comments.js');
 
 		$this->template->content = View::factory('frontend/content/comments/tree')
 			->set('comments', $comments_root->render_descendants('comments/list'))

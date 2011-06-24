@@ -21,8 +21,8 @@ foreach ($nodes as $node):?>
 			<div class="info_wrapper">
 				<div class="avatar">
 					<?php
-					 $image = ($node->user->avatar)
-							? 'media/images/avatars/'.$node->author->id.'/comment.png'
+					 $image = ($node->author->has_avatar)
+							? 'media/images/avatars/'.$node->author->id.'/thumb.jpg'
 							: 'i/stubs/avatar_comment.png';
 					echo HTML::image($image, array('alt' => $node->author->fullname))?>
 				</div>

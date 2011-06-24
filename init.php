@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-$langs = Controller_Page::langs();
+$langs = Page::instance()->system_langs();
 
 Route::set('comments', '(<lang>/)comment(/<action>(/<type>)(/<object_id>(/<place>)(/<visibility>)))', array(
 	'lang'       => $langs,
