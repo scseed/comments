@@ -5,7 +5,14 @@ $level = $nodes->current()->{$level_column};
 $first = TRUE;
 
 foreach ($nodes as $node):?>
-	<?php if ($node->{$level_column} > $level):?>
+	<?php
+	$author_name = ($node->author->nickname) ? $node->author->nickname : $node->author->fullname;
+	$avatar_src  = 'media/images/avatars/'.$node->author->id.'/thumb.jpg';
+	$avatar      = ($node->author->has_avatar AND file_exists(DOCROOT.$avatar_src))
+		? $avatar_src
+		: 'i/stubs/avatar_comment.png';
+
+	if ($node->{$level_column} > $level):?>
 		<ul>
 	<?php elseif ($node->{$level_column} < $level):?>
 		</ul>
@@ -20,14 +27,10 @@ foreach ($nodes as $node):?>
 		<div class="comment">
 			<div class="info_wrapper">
 				<div class="avatar">
-					<?php
-					 $image = ($node->author->has_avatar)
-							? 'media/images/avatars/'.$node->author->id.'/thumb.jpg'
-							: 'i/stubs/avatar_comment.png';
-					echo HTML::image($image, array('alt' => $node->author->fullname))?>
+					<?php echo HTML::image($avatar, array('alt' => $author_name))?>
 				</div>
 				<div class="info">
-					<div class="author"><?php echo $node->author->fullname?></div>
+					<div class="author"><?php echo $author_name?></div>
 					<div class="date_create"><?php echo I18n_Date::format($node->date_create, 'long')?></div>
 					<?php if(isset($_user)):?>
 					<div class="actions">
