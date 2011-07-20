@@ -3,17 +3,17 @@
 <div id="comments"><?php echo $comments?></div>
 
 <?php if(isset($_user)):?>
-<?php echo StaticJs::instance()->addJsInline(
-"
+<script type="text/javascript">
 $(document).ready(function(){
 	$('.add_comment').click(function(){
-		var form = '<div id=\"comment\">'
-				 + '<form action=\"" . Route::url('comments', array('action' => 'add', 'type' => $comment_type)) . "/' + $(this).attr('prev_id') + '/' + $(this).attr('place') + '\" method=\"post\" accept-charset=\"utf-8\">'
-				 + '<input type=\"hidden\" name=\"blog\" value=\"" . $object_id . "\" />'
-				 + '<div class=\"form-item\">'
-				 + '" . Form::textarea('text') . "'
-				 + '</div><div class=\"form-item\">'
-				 + '<div class=\"button button-lc\"><div class=\"button-rc\"><div class=\"button-fill\">" . Form::button(NULL, 'Прокомментировать') . "</div></div></div>'
+		var form = '<div id="comment">'
+				 + '<form action="' + <?php echo Route::url('comments', array('action' => 'add', 'type' => $comment_type)) ?> + '/' + $(this).attr('prev_id') + '/' + $(this).attr('place') + '" method="post" accept-charset="utf-8">'
+				 + '<input type="hidden" name="blog" value="' + <?php echo $object_id ?> + '" />'
+				 + '<div class="form-item">'
+				 + <?php echo Form::textarea('text') ?>
+				 + '</div><div class="form-item">'
+				 + '<div class="button button-lc"><div class="button-rc"><div class="button-fill">' 
+				 + <?php echo Form::button(NULL, 'Прокомментировать') ?> + '</div></div></div>'
 				 + '</div></form></div>';
 		$('#comment').remove();
 
@@ -27,8 +27,7 @@ $(document).ready(function(){
 		}
 	})
 })
-"
-)?>
+</script>
 <div id="comment">
 <?php echo Form::open(Route::url('comments', array('action' => 'add', 'type' => $comment_type, 'object_id' => $last_comment_id, 'place' => $place)))?>
 	<div class="form-item"><?php echo Form::textarea('text')?></div>
