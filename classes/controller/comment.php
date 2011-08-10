@@ -47,7 +47,7 @@ class Controller_Comment extends Controller_Template {
 		$comments_root = Jelly::query('comment')
 			->where('object_id', '=', $object_id)
 			->where('type', '=', $comment_type->id)
-			->where('level', '=', 0)
+			->where('level', '=', NULL)
 			->limit(1)
 			->select();
 

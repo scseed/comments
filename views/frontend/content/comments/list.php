@@ -31,7 +31,7 @@ foreach ($nodes as $node):?>
 				</div>
 				<div class="info">
 					<div class="author"><?php echo $author_name?></div>
-					<div class="date_create"><?php echo I18n_Date::format($node->date_create, 'long')?></div>
+					<div class="date_create"><?php date("F j, Y, g:i a", $node->date_create)?></div>
 					<?php if(isset($_user)):?>
 					<div class="actions">
 						<?php if($_user->has_role('admin')):?>
