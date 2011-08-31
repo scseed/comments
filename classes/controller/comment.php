@@ -53,6 +53,7 @@ class Controller_Comment extends Controller_Template {
 
 		$place = 'next';
 
+//		$last_comment = NULL;
 		if( ! $comments_root->loaded())
 		{
 			$scope = Jelly::query('comment')->order_by('scope', 'DESC')->limit(1)->select();
@@ -72,6 +73,7 @@ class Controller_Comment extends Controller_Template {
 					'text'      => '-'
 				))->save();
 			$comments_root->insert_as_new_root($scope);
+			$last_comment = $comments_root->id;
 			$place = 'inside';
 		}
 		else
@@ -87,12 +89,18 @@ class Controller_Comment extends Controller_Template {
 
 		StaticJs::instance()->add('/js/comments.js');
 
+		$comment_link = (class_exists('Page') AND Kohana::config('pages')->multilanguage === TRUE)
+			? Route::url('comments', array('action' => 'add', 'type' => $comment_type->name, 'lang' => i18n::lang()))
+			: Route::url('comments', array('action' => 'add', 'type' => $comment_type->name));
+
+		$main_comment_link = (class_exists('Page') AND Kohana::config('pages')->multilanguage === TRUE)
+			? Route::url('comments', array('action' => 'add', 'type' => $comment_type->name, 'object_id' => $last_comment->id, 'place' => $place, 'lang' => i18n::lang()))
+			: Route::url('comments', array('action' => 'add', 'type' => $comment_type->name, 'object_id' => $last_comment->id, 'place' => $place));
+
 		$this->template->content = View::factory('frontend/content/comments/tree')
 			->set('comments', $comments_root->render_descendants('comments/list'))
-			->bind('last_comment_id', $last_comment->id)
-			->bind('object_id', $object_id)
-			->bind('place', $place)
-			->bind('comment_type', $comment_type->name)
+			->bind('main_comment_link', $main_comment_link)
+			->bind('comment_link', $comment_link)
 			;
 	}
 

@@ -34,7 +34,7 @@ foreach ($nodes as $node):?>
 					<div class="date_create"><?php date("F j, Y, g:i a", $node->date_create)?></div>
 					<?php if(isset($_user)):?>
 					<div class="actions">
-						<?php if($_user->has_role('admin')):?>
+						<?php if($_is_admin):?>
 						<div class="left">
 								<?php echo HTML::anchor(
 									Route::get('comments')->uri(
