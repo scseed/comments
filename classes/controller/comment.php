@@ -99,9 +99,10 @@ class Controller_Comment extends Controller_Template {
 			: Route::url('comments', array('action' => 'add', 'type' => $comment_type->name, 'object_id' => $last_comment->id, 'place' => $place));
 
 		$this->template->content = View::factory('frontend/content/comments/tree')
-			->set('comments', $comments_root->render_descendants('comments/list'))
+			->set('comments', $comments_root->render_descendants('comments/list')->bind('comment_type', $comment_type))
 			->bind('main_comment_link', $main_comment_link)
 			->bind('comment_link', $comment_link)
+
 			;
 	}
 
