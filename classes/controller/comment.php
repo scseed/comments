@@ -87,7 +87,8 @@ class Controller_Comment extends Controller_Template {
 				$place = 'inside';
 		}
 
-		StaticJs::instance()->add('/js/comments.js');
+		StaticJs::instance()->add('js/comments.js');
+		StaticCss::instance()->add('css/comments.css');
 
 		$comment_link = (class_exists('Page') AND Kohana::config('pages')->multilanguage === TRUE)
 			? Route::url('comments', array('action' => 'add', 'type' => $comment_type->name, 'lang' => i18n::lang()))
