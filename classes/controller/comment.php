@@ -90,11 +90,11 @@ class Controller_Comment extends Controller_Template {
 		StaticJs::instance()->add('js/comments.js');
 		StaticCss::instance()->add('css/comments.css');
 
-		$comment_link = (class_exists('Page') AND Kohana::config('pages')->multilanguage === TRUE)
+		$comment_link = (class_exists('Page') AND Kohana::$config->load('pages')->multilanguage === TRUE)
 			? Route::url('comments', array('action' => 'add', 'type' => $comment_type->name, 'lang' => i18n::lang()))
 			: Route::url('comments', array('action' => 'add', 'type' => $comment_type->name));
 
-		$main_comment_link = (class_exists('Page') AND Kohana::config('pages')->multilanguage === TRUE)
+		$main_comment_link = (class_exists('Page') AND Kohana::$config->load('pages')->multilanguage === TRUE)
 			? Route::url('comments', array('action' => 'add', 'type' => $comment_type->name, 'object_id' => $last_comment->id, 'place' => $place, 'lang' => i18n::lang()))
 			: Route::url('comments', array('action' => 'add', 'type' => $comment_type->name, 'object_id' => $last_comment->id, 'place' => $place));
 
