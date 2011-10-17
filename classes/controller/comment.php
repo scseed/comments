@@ -30,12 +30,16 @@ class Controller_Comment extends Controller_Template {
 		if( ! $this->_ajax OR ! $object_id)
 			throw new HTTP_Exception_404();
 
-		$comment_type = Jelly::query('comment_type')->where('name', '=', $comment_type_name)->limit(1)->select();
+		$comment_type = Jelly::query('comment_type')
+			->where('name', '=', $comment_type_name)
+			->limit(1)
+			->select();
 
 		if( ! $comment_type->loaded())
 		{
 			try
 			{
+				$comment_type->set(array('name' => $comment_type_name));
 				$comment_type->save();
 			}
 			catch(Jelly_Validation_Exception $e)
@@ -73,7 +77,7 @@ class Controller_Comment extends Controller_Template {
 					'text'      => '-'
 				))->save();
 			$comments_root->insert_as_new_root($scope);
-			$last_comment = $comments_root->id;
+			$last_comment = $comments_root;
 			$place = 'inside';
 		}
 		else
